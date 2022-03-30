@@ -9,7 +9,7 @@ TripleWalk is an algorithm to learn vector embeddings of entities in a knowledge
 
 #### Install from PyPI
 ``` Python
-pip install triple_walk
+pip install triple-walk
 ```
 
 #### Install from Github
