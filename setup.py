@@ -76,10 +76,10 @@ setuptools.setup(
     },
     install_requires=[
         'torch==1.9.0',
+        'numpy==1.19.5',
+        'pandas==1.3.2',
         'networkx==2.6.2',
         'pytest==6.2.4',
-        'loguru==0.5.3',
-        'scipy==1.7.1'
     ],
     packages=find_packages(),
 )
