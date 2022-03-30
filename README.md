@@ -1,3 +1,6 @@
+# Triple Walk
+Author : Sachin Gavali
+
 > A random walk based algorithm to learn embeddings of entities in knowledge graph.
 
 ## What is it
@@ -17,9 +20,6 @@ pip install triple-walk
 pip install git+https://github.com/udel-cbcb/triple_walk.git#egg=triple_walk
 ```
 
-
-# Triple Walk
-Author : Sachin Gavali
 
 ## Requirements
 ```
