@@ -1,1 +1,3 @@
-recursive-include csrc
+recursive-include csrc/*
+recursive-include csrc/cuda/*
+include csrc/cuda/utils.cuh
