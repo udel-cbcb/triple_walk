@@ -30,7 +30,7 @@ Author : Sachin Gavali
 ```
 
 ## Examples
-[SkipGramTriple](examples/skipgram_triple_walk.py)
-
+* SkipGram Triple Walk model : [SkipGramTriple](examples/skipgram_triple_walk.py)
+* CBOW Triple Walk model : [CBOWTriple](examples/skipgram_triple_walk.py)
 
 
