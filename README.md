@@ -18,7 +18,7 @@ pip install git+https://github.com/udel-cbcb/triple_walk.git#egg=triple_walk
 ```
 
 
-# Pytorch Random Walk
+# Triple Walk
 Author : Sachin Gavali
 
 ## Requirements
