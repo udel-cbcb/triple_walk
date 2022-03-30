@@ -12,6 +12,7 @@ def get_extension():
 
     # get the sources
     sources = glob.glob('csrc/**/*.cpp',recursive=True)
+    #sources.extend(glob.glob('csrc/**/*.h',recursive=True))
 
     # get the cuda sources
     if torch.cuda.is_available() and torch.version.cuda:
@@ -66,7 +67,7 @@ def get_extension():
 
 setuptools.setup(
     name="triple_walk",
-    version="0.0.1",
+    version="0.0.2",
     author="Sachin Gavali",
     author_email="saching@udel.edu",
     description="A pytorch extension library to perform triple walks on knowledge graphs",
