@@ -1,6 +1,7 @@
 import torch
 import networkx as nx
 import pandas as pd
+import numpy as np
 
 def to_csr(graph):
     csr = nx.to_scipy_sparse_matrix(graph,format='csr')    
@@ -120,7 +121,48 @@ def build_relation_tail_index(triples_indexed_tensor,all_entities_tensor):
     return node_edge_index, triples_indexed_tensor
             
 
-            
+def to_indexed_triples(triples_named_pd):
+
+    # get all entities
+    entities = []
+    entities.extend(triples_named_pd["head"].unique().tolist())
+    entities.extend(triples_named_pd["tail"].unique().tolist())
+
+     # merge and get unique
+    entities = list(set(entities))
+
+    # create a mapping of entities
+    entity_map = {}
+    for index,entity in enumerate(entities):
+        entity_map[entity] = index
+
+    # get relationships
+    relationships = triples_named_pd["relation"].unique().tolist()
+
+    # create a mapping of relationships
+    relation_map = {}
+    num_entities = len(entity_map)
+    for index, relation in enumerate(relationships):
+        relation_map[relation] = num_entities+index
+
+    # create a new array to hold indexed triples
+    triples_indexed = np.zeros(shape=triples_named_pd.shape).astype(int)
+
+    # to numpy
+    triples_named_np = triples_named_pd.to_numpy()
+
+    for index in range(len(triples_named_np)):
+        triple = triples_named_np[index]
+
+        head_index = entity_map[triple[0]]
+        rel_index = relation_map[triple[1]]
+        tail_index = entity_map[triple[2]]
+
+        triples_indexed[index][0] = head_index
+        triples_indexed[index][1] = rel_index
+        triples_indexed[index][2] = tail_index
+
+    return triples_indexed,entity_map,relation_map
 
 
 

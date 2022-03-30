@@ -43,7 +43,6 @@ class TriplesTest(unittest.TestCase):
         
         # build relation_tail index
         relation_tail_index,triples_tensor_sorted = utils.build_relation_tail_index(triples_tensor,target_nodes)
-
         relation_tail_index_actual = torch.Tensor([[ 0,  2],
                                                 [ 3,  3],
                                                 [ 4,  5],

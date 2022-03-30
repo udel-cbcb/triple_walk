@@ -9,7 +9,7 @@ def test_to_windows_triples_cpu():
     triples = torch.randint(low=0,high=30,size=(10,3))
 
     # to window
-    target_triples, pos_windows, neg_windows = rw.to_windows_triples(walks=walks,
+    target_triples, pos_windows, neg_windows = rw.to_windows_triples_sg(walks=walks,
                                                                      window_size=4,
                                                                      num_nodes=30,
                                                                      padding_idx=-1,
@@ -70,7 +70,7 @@ def test_to_windows_triples_cuda():
     triples = torch.randint(low=0,high=30,size=(10,3)).cuda()
 
     # to window
-    target_triples, pos_windows, neg_windows = rw.to_windows_triples(walks=walks,
+    target_triples, pos_windows, neg_windows = rw.to_windows_triples_sg(walks=walks,
                                                                      window_size=4,
                                                                      num_nodes=30,
                                                                      padding_idx=-1,
