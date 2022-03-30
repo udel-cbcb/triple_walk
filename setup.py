@@ -67,7 +67,7 @@ def get_extension():
 
 setuptools.setup(
     name="triple_walk",
-    version="0.0.2",
+    version="0.0.3",
     author="Sachin Gavali",
     author_email="saching@udel.edu",
     description="A pytorch extension library to perform triple walks on knowledge graphs",
