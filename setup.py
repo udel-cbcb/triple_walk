@@ -5,6 +5,9 @@ import glob
 import os
 import torch
 
+with open('README.md') as f:
+    long_description = f.read()
+
 def get_extension():
 
     # get the sources
@@ -67,6 +70,8 @@ setuptools.setup(
     author="Sachin Gavali",
     author_email="saching@udel.edu",
     description="A pytorch extension library to perform triple walks on knowledge graphs",
+    long_description = long_description,
+    long_description_content_type="text/markdown",
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     test_suite='tests',
