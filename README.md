@@ -5,40 +5,95 @@ Author : Sachin Gavali
 ## Requirements
 ```
 1. Pytorch >= 1.9.0
-2. NVIDIA-GPU (Cuda Toolkit >= 10.1)
+2. NVIDIA-GPU (Cuda Toolkit >= 11.4
 3. AMD-GPU (ROCM == 4.0.1)
 4. Python == 3.8
 ```
 
-## Peform Random Walk
+## Example SkipGramTriple
 
 ```
-import torch
-from torch_rw import utils
-from torch_rw import rw
-import networkx as nx
+# triples
+triples_list = [
+    ("A","r1","B"),
+    ("B","r2","D"),
+    ("A","r1","C"),
+    ("C","r2","E"),
+    ("C","r3","B"),
+    ("A","r2","D"),
+    ("D","r3","A"),
+    ("D","r2","C")
+]
 
-# create graph
-graph = nx.Graph()
+triple_list_pd = pd.DataFrame(data=triples_list,columns=["head","relation","tail"])
 
-# add edge
-graph.add_edge("A","B")
-graph.add_edge("A","C")
-graph.add_edge("B","C")
-graph.add_edge("B","D")
-graph.add_edge("D","C")
-graph.add_edge("E","A")
-graph.add_edge("E","D")
+# convert to indexed triples
+triples_index, entities_map,relations_map = utils.to_indexed_triples(triple_list_pd)
 
-# get csr
-row_ptr, col_idx = utils.to_csr(graph)
-nodes = utils.nodes_tensor(graph)
+# convert to torch tensor
+triples_index_tensor = torch.from_numpy(triples_index)
 
-# move all tensors to gpu
-row_ptr = row_ptr.to("cuda")
-col_idx = col_idx.to("cuda")
-nodes = nodes.to("cuda")
+# get target nodes
+target_entities_list = list(set(triples_index_tensor[:,0].tolist()+triples_index_tensor[:,2].tolist()))
+target_entities_tensor = torch.Tensor(target_entities_list).to(int)
 
-# perform walks
-walks = rw.walk(row_ptr=row_ptr,col_idx=col_idx,target_nodes=nodes,p=1.0,q=1.0,walk_length=6,seed=10)
+# build node edge index
+relation_tail_index,triples_index_tensor_sorted = utils.build_relation_tail_index(triples_index_tensor,target_entities_tensor)
+
+# create a list of all entities
+all_entities_list = list(entities_map.values()) + list(relations_map.values())
+
+# sort the list
+all_entities_list.sort()
+
+# create the padding index
+padding_idx = all_entities_list[-1] + 1
+
+# perform walk
+walks = rw.walk_triples(triples_indexed=triples_index_tensor_sorted,
+                        relation_tail_index=relation_tail_index,
+                        target_nodes=target_entities_tensor,
+                        walk_length=6,
+                        seed=10,
+                        padding_idx=padding_idx,
+                        restart=False
+                        )
+
+# split walk to windows
+target_triples,pos_context,neg_context = rw.to_windows_triples_sg(walks=walks,
+                                                                window_size=4,
+                                                                num_nodes=30,
+                                                                padding_idx=padding_idx,
+                                                                triples=triples_index_tensor_sorted,
+                                                                seed=20)
+
+
+# create the model
+model = SkipGramTriple(num_nodes=len(all_entities_list),
+                                    embedding_dim=32,
+                                    padding_index=padding_idx
+                                )
+
+# train the model for one step
+loss = model(target_triples,pos_context,neg_context)
+
+# get head embeddings
+head_embedding = model.get_head_embedding(to_cpu=False)
+
+# to data frame
+head_embedding_filtered = head_embedding[list(entities_map.values())]
+head_embedding_df = pd.DataFrame(data=head_embedding_filtered)
+head_embedding_df.insert(0,"entity",list(entities_map.keys()))
+
+
+# get tail embeddings
+tail_embedding = model.get_tail_embedding(to_cpu=False)
+
+# to data frame
+tail_embedding_filtered = tail_embedding[list(entities_map.values())]
+tail_embedding_df = pd.DataFrame(data=tail_embedding_filtered)
+tail_embedding_df.insert(0,"entity",list(entities_map.keys()))
+
 ```
+
+

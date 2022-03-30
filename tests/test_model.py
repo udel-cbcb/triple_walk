@@ -58,7 +58,7 @@ class ModelTest(unittest.TestCase):
                                 )
 
         # split walk to windows
-        pos_triples, neg_triples, context = rw.to_windows_triples_cbow(walks=walks,
+        pos_target, neg_target, context = rw.to_windows_triples_cbow(walks=walks,
                                                                         window_size=4,
                                                                         num_nodes=30,
                                                                         padding_idx=padding_idx,
@@ -73,7 +73,7 @@ class ModelTest(unittest.TestCase):
                                         )
 
         # train the model for one step
-        loss = model(pos_triples,neg_triples,context)
+        loss = model(pos_target,neg_target,context)
 
         assert loss != 0, "loss cannot be zero"
 
@@ -145,6 +145,23 @@ class ModelTest(unittest.TestCase):
         loss = model(target_triples,pos_context,neg_context)
 
         assert loss != 0, "loss cannot be zero"
+
+        # get head embeddings
+        head_embedding = model.get_head_embedding(to_cpu=False)
+
+        # to data frame
+        head_embedding_filtered = head_embedding[list(entities_map.values())]
+        head_embedding_df = pd.DataFrame(data=head_embedding_filtered)
+        head_embedding_df.insert(0,"entity",list(entities_map.keys()))
+
+
+        # get tail embeddings
+        tail_embedding = model.get_tail_embedding(to_cpu=False)
+
+        # to data frame
+        tail_embedding_filtered = tail_embedding[list(entities_map.values())]
+        tail_embedding_df = pd.DataFrame(data=tail_embedding_filtered)
+        tail_embedding_df.insert(0,"entity",list(entities_map.keys()))
 
         
 
