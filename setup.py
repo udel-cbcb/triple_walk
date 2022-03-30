@@ -15,21 +15,16 @@ def get_extension():
     #sources.extend(glob.glob('csrc/**/*.h',recursive=True))
 
     # get the cuda sources
-    if torch.cuda.is_available() and torch.version.cuda:
-        sources_cuda = glob.glob('csrc/**/*.cu',recursive=True)   
-        sources.extend(sources_cuda)
+    sources_cuda = glob.glob('csrc/**/*.cu',recursive=True)   
+    sources.extend(sources_cuda)
 
-        # remove file names having hip
-        sources_cleaned = []
-        for file_name in sources:
-            if "hip" not in file_name:
-                sources_cleaned.append(file_name)
+    # remove file names having hip
+    sources_cleaned = []
+    for file_name in sources:
+        if "hip" not in file_name:
+            sources_cleaned.append(file_name)
 
-        sources = sources_cleaned
-        
-    else:
-        sources_hip = glob.glob('csrc/**/*.hip',recursive=True)   
-        sources.extend(sources_hip)
+    sources = sources_cleaned
     
     print(sources)
 
@@ -49,13 +44,6 @@ def get_extension():
     # set include dirs
     include_dirs = ["csrc"]
 
-    if torch.cuda.is_available() and torch.version.hip:
-        # add rocrand headers
-        include_dirs.extend([
-            "/opt/rocm/include/rocrand",
-            "/opt/rocm/include/hiprand"
-        ])
-
     extension = CUDAExtension(
         'triple_walk_native',
         sources=sources,
@@ -67,7 +55,7 @@ def get_extension():
 
 setuptools.setup(
     name="triple_walk",
-    version="0.0.3",
+    version="0.0.4",
     author="Sachin Gavali",
     author_email="saching@udel.edu",
     description="A pytorch extension library to perform triple walks on knowledge graphs",
