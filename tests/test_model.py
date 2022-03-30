@@ -127,7 +127,7 @@ class ModelTest(unittest.TestCase):
                                 )
 
         # split walk to windows
-        pos_triples, neg_triples, context = rw.to_windows_triples_sg(walks=walks,
+        target_triples,pos_context,neg_context = rw.to_windows_triples_sg(walks=walks,
                                                                         window_size=4,
                                                                         num_nodes=30,
                                                                         padding_idx=padding_idx,
@@ -142,7 +142,7 @@ class ModelTest(unittest.TestCase):
                                         )
 
         # train the model for one step
-        loss = model(pos_triples,neg_triples,context)
+        loss = model(target_triples,pos_context,neg_context)
 
         assert loss != 0, "loss cannot be zero"
 
