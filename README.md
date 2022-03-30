@@ -1,4 +1,4 @@
-> A simple algorithm to learn embeddings of entities in knowledge graph.
+> A random walk based algorithm to learn embeddings of entities in knowledge graph.
 
 ## What is it
 TripleWalk is an algorithm to learn vector embeddings of entities in a knowledge graph by performing random walks on triples.
