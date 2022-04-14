@@ -1,10 +1,7 @@
-from networkx.classes.function import neighbors
 import torch
 from triple_walk import utils
 from triple_walk import rw
-import networkx as nx
 import unittest
-from loguru import logger
 
 
 class TriplesTest(unittest.TestCase):

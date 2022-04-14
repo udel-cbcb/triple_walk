@@ -128,7 +128,7 @@ namespace triples {
         int64_t num_nodes = (*target_nodes).size(0);
 
         // Thread block size
-        int NUM_THREADS = 1024;
+        int NUM_THREADS = 128;
 
         // Grid size
         int NUM_BLOCKS = int((num_nodes + NUM_THREADS - 1)/NUM_THREADS);

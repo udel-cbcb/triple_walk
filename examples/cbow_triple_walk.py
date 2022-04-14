@@ -1,3 +1,4 @@
+from tqdm import tqdm
 from triple_walk import utils
 from triple_walk import rw
 from triple_walk.model import CBOWTriple, SkipGramTriple
@@ -40,7 +41,10 @@ all_entities_list = list(entities_map.values()) + list(relations_map.values())
 all_entities_list.sort()
 
 # create the padding index
+
 padding_idx = all_entities_list[-1] + 1
+
+
 
 # perform walk
 walks = rw.walk_triples(triples_indexed=triples_index_tensor_sorted,
@@ -55,7 +59,7 @@ walks = rw.walk_triples(triples_indexed=triples_index_tensor_sorted,
 # split walk to windows
 pos_target, neg_target, context = rw.to_windows_triples_cbow(walks=walks,
                                                                         window_size=4,
-                                                                        num_nodes=30,
+                                                                        num_nodes=len(all_entities_list),
                                                                         padding_idx=padding_idx,
                                                                         triples=triples_index_tensor_sorted,
                                                                         seed=20)

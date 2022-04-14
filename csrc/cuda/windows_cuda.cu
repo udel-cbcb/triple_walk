@@ -408,7 +408,7 @@ std::tuple<at::Tensor, at::Tensor, at::Tensor> to_windows_triples_gpu(const torc
     auto triples_accessor = triples->packed_accessor64<int64_t,2>();
 
     // Thread block size
-    int NUM_THREADS = 256;
+    int NUM_THREADS = 128;
 
     // Grid size
     int NUM_BLOCKS = int((num_walks + NUM_THREADS - 1)/NUM_THREADS);

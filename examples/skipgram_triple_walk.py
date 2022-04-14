@@ -42,6 +42,11 @@ all_entities_list.sort()
 # create the padding index
 padding_idx = all_entities_list[-1] + 1
 
+# move tensors to gpu
+triples_index_tensor_sorted = triples_index_tensor_sorted.cuda()
+relation_tail_index = relation_tail_index.cuda()
+target_entities_tensor = target_entities_tensor.cuda()
+
 # perform walk
 walks = rw.walk_triples(triples_indexed=triples_index_tensor_sorted,
                         relation_tail_index=relation_tail_index,
@@ -67,6 +72,9 @@ model = SkipGramTriple(num_nodes=len(all_entities_list),
                                     padding_index=padding_idx
                                 )
 
+# move model to gpu
+model = model.cuda()
+
 # train the model for one step
 loss = model(target_triples,pos_context,neg_context)
 
@@ -86,3 +94,5 @@ tail_embedding = model.get_tail_embedding(to_cpu=False)
 tail_embedding_filtered = tail_embedding[list(entities_map.values())]
 tail_embedding_df = pd.DataFrame(data=tail_embedding_filtered)
 tail_embedding_df.insert(0,"entity",list(entities_map.keys()))
+
+print(loss)
